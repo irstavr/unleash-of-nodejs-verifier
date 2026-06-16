@@ -19,17 +19,10 @@ export interface UnleashLike {
 }
 
 /**
- * REFERENCE PROVIDER — a hand-written, deliberately correct implementation.
+ * REFERENCE PROVIDER — a LLM-written, conforms contract with no 'known gaps'.
  *
- * It is the executable definition of "right": it implements the agreed
- * behaviour the contract expects (variant reason SPLIT, csv-as-string, scalar
- * JSON passthrough, number-empty guard, DEFAULT on targeting miss, default on
- * DISABLED), so it passes the whole contract with NO known gaps. That makes it a
- * useful second target: proof the contract is satisfiable, and a yardstick the
- * real provider can be diffed against.
- *
- * The golden rule encoded below: a provider NEVER throws and NEVER returns a
- * bare value — it returns ResolutionDetails with the right reason/errorCode.
+ * provider NEVER throws and NEVER returns a bare value
+ * it returns ResolutionDetails with the right reason/errorCode.
  */
 export class ReferenceUnleashProvider implements Provider {
 	readonly metadata = { name: "reference-unleash-provider" } as const;

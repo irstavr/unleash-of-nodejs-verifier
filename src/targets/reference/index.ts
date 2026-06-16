@@ -3,17 +3,17 @@ import { bootstrapUnleash } from "./bootstrap.js";
 import { ReferenceUnleashProvider } from "./provider.js";
 
 /**
- * The reference target: a correct, hand-written provider over a bootstrapped
- * (server-less) Unleash client. It has no known gaps — it implements the agreed
- * behaviour exactly — so running the contract against it proves the contract is
- * satisfiable and the harness works. (The provider's own client is destroyed in
- * onClose, which OpenFeature.close() triggers, so teardown is a no-op.)
+ * A provider over a server-less Unleash client - Used for testing.
+ * 
+ * It has no known gaps — implements the agreed behavior exactly — so running the 
+ * contract against it proves the contract is satisfiable and the harness works. 
  */
 export const referenceTarget: ProviderTarget = {
-  name: "reference",
+  name: "example",
   async setUp() {
     const unleash = await bootstrapUnleash();
     const provider = new ReferenceUnleashProvider(unleash);
+
     return { provider, teardown: async () => {} };
   },
 };

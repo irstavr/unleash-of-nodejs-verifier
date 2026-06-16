@@ -6,15 +6,13 @@ import type {
 } from '@openfeature/server-sdk';
 import type { Scenario } from '../contract/types.js';
 
-/**
- * Makes the OpenFeature call for a scenario 
- */
 export async function evaluate(
   client: Client,
   s: Scenario,
 ): Promise<EvaluationDetails<JsonValue>> {
   const ctx = (s.context ?? {}) as EvaluationContext;
 
+  // calls OF for a scenario
   switch (s.type) {
     case 'boolean':
       return client.getBooleanDetails(s.flagKey, s.default as boolean, ctx) as any;

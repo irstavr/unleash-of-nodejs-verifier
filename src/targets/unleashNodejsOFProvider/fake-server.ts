@@ -2,20 +2,11 @@ import http from "node:http";
 import features from "../../../fixtures/unleash-features.json";
 
 /**
- * A featherweight, PROGRAMMABLE stand-in for the Unleash Client API.
- *
- * It serves the fixtures at GET /api/client/features and accepts the SDK's
- * register/metrics POSTs — the whole surface the Unleash Node SDK needs. The
- * real provider builds its own client and only needs a URL, so this requires no
- * change to the provider's interface and exercises its real fetch/parse path.
- *
- * The `control` surface (setFeatures / failNext) lets lifecycle tests drive the
- * real provider's STALE / recovery / configuration-changed transitions.
+ * As real provider builds its own client and only needs a URL, this fake Unleash Server
+ * requires no change to the provider's interface and has its real fetch/parse path.
  */
 export interface FakeUnleashControl {
-  /** Swap the served flag set; next poll picks it up (drives CONFIGURATION_CHANGED). */
   setFeatures(next: unknown): void;
-  /** Make the next `times` feature fetches respond with `status` (drives STALE/ERROR/recovery). */
   failNext(status: number, times?: number): void;
 }
 
@@ -62,12 +53,13 @@ export async function startFakeUnleash(initialFeatures: unknown = features): Pro
     });
   });
 
-  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve()));
+  const hostname = "127.0.0.1";
+  await new Promise<void>((resolve) => server.listen(0, hostname, () => resolve()));
   const addr = server.address();
   const port = typeof addr === "object" && addr ? addr.port : 0;
 
   return {
-    url: `http://127.0.0.1:${port}/api`,
+    url: `http://${hostname}:${port}/api`,
     token: "verifier-not-a-real-token",
     control: {
       setFeatures: (next) => {

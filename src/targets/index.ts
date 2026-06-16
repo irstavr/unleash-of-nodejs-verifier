@@ -3,12 +3,10 @@ import type { ProviderTarget } from "./types.js";
 import { unleashJsOFtarget } from "./unleashNodejsOFProvider/index.js";
 
 /**
- * The list of providers the verifier checks. The test scenarios iterate this list.
+ * The list of providers the verifier checks.
+ * 
  * To add a new provider: create a new target folder and add it here.
- *
- * - unleash:   the real @unleash/openfeature-node-provider (has known gaps).
- * - reference: a correct hand-written provider (no gaps) — proves the contract
- *   is satisfiable and acts as a yardstick.
+ * This is the list the test scenarios iterates.
  */
 export const targets: ProviderTarget[] = [unleashJsOFtarget, referenceTarget];
 

@@ -2,12 +2,6 @@ import { UnleashProvider as UnleashJsOFProvider } from "@unleash/openfeature-nod
 import type { ProviderTarget } from "../types.js";
 import { startFakeUnleash } from "./fake-server.js";
 
-/**
- * The Unleash target: the real `@unleash/openfeature-node-provider`, pointed at
- * a local fake Unleash Client API (no server, no token, loopback only). The
- * provider builds its own client and only needs a URL, so this exercises its
- * real fetch/parse/evaluate path.
- */
 export const unleashJsOFtarget: ProviderTarget = {
   name: "unleash",
 
@@ -25,7 +19,6 @@ export const unleashJsOFtarget: ProviderTarget = {
   },
 
   // Scenarios the real provider does not satisfy yet (green while tracked; red once fixed). 
-  // Details in OPENFEATURE-TRANSLATION-DEEP-ANALYSIS.md / FINDINGS.
   knownGaps: {
     "bool-disabled-default-true":
       "Returns false for a disabled boolean (ignores caller default); inconsistent with the variant path which returns the default on DISABLED.",
