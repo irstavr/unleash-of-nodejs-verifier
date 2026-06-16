@@ -16,7 +16,7 @@ import {
 	OpenFeature,
 } from "@openfeature/server-sdk";
 import { UnleashProvider } from "@unleash/openfeature-node-provider";
-import { startFakeUnleash } from "../../src/targets/nodejsOFUnleashProvider/fake-server.js";
+import { startFakeUnleash } from "../../src/targets/unleashNodejsOFProvider/fake-server.js";
 
 async function main() {
 	const useRealServer = Boolean(process.env.UNLEASH_URL);

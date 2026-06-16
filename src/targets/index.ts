@@ -1,6 +1,6 @@
-import { unleashJsOFtarget } from "./nodejsOFUnleashProvider/index.js";
 import { referenceTarget } from "./reference/index.js";
 import type { ProviderTarget } from "./types.js";
+import { unleashJsOFtarget } from "./unleashNodejsOFProvider/index.js";
 
 /**
  * The list of providers the verifier checks. The test scenarios iterate this list.
