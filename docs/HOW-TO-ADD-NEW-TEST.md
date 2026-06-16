@@ -1,13 +1,13 @@
 # Adding a new guarantee
 
-You almost never edit a test file. To add a verified behaviour:
+To add a verified behaviour:
 
 ## 1. (If needed) add a flag to the fixtures
 
-Open `fixtures/unleash-features.json` and add a feature using the real Unleash
-shape. Example — a flag with an integer NUMBER variant:
+Open `fixtures/unleash-features.json` and add a feature using the real Unleash shape:
 
 ```json
+// a flag with an integer NUMBER variant
 {
   "name": "demo.max-retries",
   "enabled": true,
@@ -23,12 +23,9 @@ shape. Example — a flag with an integer NUMBER variant:
 }
 ```
 
-Reminder: a variant `payload.value` is **always a string** in Unleash, even for
-numbers and JSON. That's the point — the provider has to coerce it.
-
 ## 2. Add a scenario row
 
-Open `src/contract/scenarios.ts` and add one object:
+Open `src/contract/scenarios.ts` and add one object in the Contract:
 
 ```ts
 {
@@ -57,7 +54,7 @@ npm test
 ```
 
 That's it. `scenarios.test.ts` picks up the new row automatically and runs it
-against every registered target, reporting by `id`. No test code to write.
+against every registered target, reporting by `id`.
 
 ## Field cheat-sheet
 
@@ -73,8 +70,6 @@ against every registered target, reporting by `id`. No test code to write.
 
 ## Tips
 
-- Omitting `expect.errorCode` is an assertion in itself: the test will fail if
-  *any* error code comes back. Use that to lock down happy paths.
-- Use `tags` to group capabilities; they become the columns of the published
-  compatibility matrix later.
-- Keep one behaviour per row. Small, named scenarios make failures obvious.
+- `expect.errorCode` is an assertion in itself: the test will fail if *any* error code comes back. Used for happy paths.
+- `tags` group capabilities; they become the columns of the published compatibility matrix later.
+- Keep one behavior per row. Small, named scenarios make failures obvious.

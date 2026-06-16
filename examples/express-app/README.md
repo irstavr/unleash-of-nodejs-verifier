@@ -3,12 +3,6 @@
 A small console demo (`index.ts`) that reads one flag of each kind through the
 real provider and prints the value, reason, and variant.
 
-## Why it's here
-
-The customer's-eye view: the provider is constructed **once**, at startup;
-everything after is the vendor-neutral OpenFeature API. Swap the provider and
-the rest of the app is unchanged.
-
 ## Run it (no server needed)
 
 ```bash
