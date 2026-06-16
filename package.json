@@ -1,0 +1,28 @@
+{
+  "name": "unleash-openfeature-nodejs-verifier",
+  "version": "0.1.0",
+  "description": "Verification of Node.js Unleash OpenFeature provider",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "example": "tsx examples/express-app/index.ts"
+  },
+  "dependencies": {
+    "@openfeature/server-sdk": "^1.18.0",
+    "@unleash/openfeature-node-provider": "file:../unleash-js-openfeature-provider",
+    "unleash-client": "^6.11.0"
+  },
+  "overrides": {
+    "unleash-client": "$unleash-client",
+    "@openfeature/server-sdk": "$@openfeature/server-sdk"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2",
+    "vitest": "^2.1.8"
+  }
+}

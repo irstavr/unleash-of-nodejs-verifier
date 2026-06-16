@@ -1,0 +1,176 @@
+{
+  "version": 2,
+  "features": [
+    {
+      "name": "demo.checkout-v2",
+      "type": "release",
+      "description": "Plain boolean flag, always-on default strategy.",
+      "enabled": true,
+      "impressionData": true,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }]
+    },
+    {
+      "name": "demo.legacy-banner",
+      "type": "release",
+      "description": "Disabled flag — exercises the DISABLED reason.",
+      "enabled": false,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }]
+    },
+    {
+      "name": "demo.eu-only",
+      "type": "release",
+      "description": "Enabled, but a constraint gates it to region=EU. Exercises TARGETING_MATCH vs DEFAULT via context.",
+      "enabled": true,
+      "strategies": [
+        {
+          "name": "default",
+          "parameters": {},
+          "constraints": [
+            { "contextName": "region", "operator": "IN", "values": ["EU"] }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "demo.greeting",
+      "type": "experiment",
+      "description": "String-payload variant.",
+      "enabled": true,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }],
+      "variants": [
+        {
+          "name": "friendly",
+          "weight": 1000,
+          "stickiness": "userId",
+          "payload": { "type": "string", "value": "hello-world" }
+        }
+      ]
+    },
+    {
+      "name": "demo.checkout-config",
+      "type": "release",
+      "description": "JSON-payload variant resolving to an object.",
+      "enabled": true,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }],
+      "variants": [
+        {
+          "name": "rollout",
+          "weight": 1000,
+          "stickiness": "userId",
+          "payload": { "type": "json", "value": "{\"maxItems\":50,\"express\":true}" }
+        }
+      ]
+    },
+    {
+      "name": "demo.array-config",
+      "type": "release",
+      "description": "JSON payload that is an ARRAY — objects calls must accept arrays.",
+      "enabled": true,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }],
+      "variants": [
+        {
+          "name": "list",
+          "weight": 1000,
+          "stickiness": "userId",
+          "payload": { "type": "json", "value": "[1,2,3]" }
+        }
+      ]
+    },
+    {
+      "name": "demo.scalar-json",
+      "type": "release",
+      "description": "JSON payload that parses to a SCALAR (42). Object call must reject with TYPE_MISMATCH.",
+      "enabled": true,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }],
+      "variants": [
+        {
+          "name": "scalar",
+          "weight": 1000,
+          "stickiness": "userId",
+          "payload": { "type": "json", "value": "42" }
+        }
+      ]
+    },
+    {
+      "name": "demo.price-multiplier",
+      "type": "release",
+      "description": "NUMBER-payload variant (stored as the string \"1.25\").",
+      "enabled": true,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }],
+      "variants": [
+        {
+          "name": "surge",
+          "weight": 1000,
+          "stickiness": "userId",
+          "payload": { "type": "number", "value": "1.25" }
+        }
+      ]
+    },
+    {
+      "name": "demo.empty-number",
+      "type": "release",
+      "description": "NUMBER payload is an EMPTY string. Number('') === 0 in JS — provider must guard and return PARSE_ERROR, not 0.",
+      "enabled": true,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }],
+      "variants": [
+        {
+          "name": "blank",
+          "weight": 1000,
+          "stickiness": "userId",
+          "payload": { "type": "number", "value": "" }
+        }
+      ]
+    },
+    {
+      "name": "demo.broken-json",
+      "type": "release",
+      "description": "Malformed JSON payload — exercises PARSE_ERROR.",
+      "enabled": true,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }],
+      "variants": [
+        {
+          "name": "bad",
+          "weight": 1000,
+          "stickiness": "default",
+          "payload": { "type": "json", "value": "{not valid json" }
+        }
+      ]
+    },
+    {
+      "name": "demo.csv-export",
+      "type": "release",
+      "description": "CSV payload — explicitly UNSUPPORTED as a typed OpenFeature value.",
+      "enabled": true,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }],
+      "variants": [
+        {
+          "name": "csv",
+          "weight": 1000,
+          "stickiness": "userId",
+          "payload": { "type": "csv", "value": "a,b,c" }
+        }
+      ]
+    },
+    {
+      "name": "demo.ab-test",
+      "type": "experiment",
+      "description": "Two variants 50/50 with userId stickiness — drives determinism + distribution tests.",
+      "enabled": true,
+      "strategies": [{ "name": "default", "parameters": {}, "constraints": [] }],
+      "variants": [
+        {
+          "name": "control",
+          "weight": 500,
+          "stickiness": "userId",
+          "payload": { "type": "string", "value": "A" }
+        },
+        {
+          "name": "treatment",
+          "weight": 500,
+          "stickiness": "userId",
+          "payload": { "type": "string", "value": "B" }
+        }
+      ]
+    }
+  ]
+}
