@@ -9,7 +9,7 @@ import { ReferenceUnleashProvider } from "./provider.js";
  * contract against it proves the contract is satisfiable and the harness works. 
  */
 export const referenceTarget: ProviderTarget = {
-  name: "example",
+  name: "reference",
   async setUp() {
     const unleash = await bootstrapUnleash();
     const provider = new ReferenceUnleashProvider(unleash);

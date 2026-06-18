@@ -1,6 +1,6 @@
 import { referenceTarget } from "./reference/index.js";
 import type { ProviderTarget } from "./types.js";
-import { unleashJsOFtarget } from "./unleashNodejsOFProvider/index.js";
+import { unleashTarget } from "./unleashNodejsOFProvider/index.js";
 
 /**
  * The list of providers the verifier checks.
@@ -8,6 +8,6 @@ import { unleashJsOFtarget } from "./unleashNodejsOFProvider/index.js";
  * To add a new provider: create a new target folder and add it here.
  * This is the list the test scenarios iterates.
  */
-export const targets: ProviderTarget[] = [unleashJsOFtarget, referenceTarget];
+export const targets: ProviderTarget[] = [unleashTarget, referenceTarget];
 
 export type { BackendControl, ProviderTarget, TargetHandle } from "./types.js";

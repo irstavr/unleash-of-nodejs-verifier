@@ -2,7 +2,7 @@ import { UnleashProvider as UnleashJsOFProvider } from "@unleash/openfeature-nod
 import type { ProviderTarget } from "../types.js";
 import { startFakeUnleash } from "./fake-server.js";
 
-export const unleashJsOFtarget: ProviderTarget = {
+export const unleashTarget: ProviderTarget = {
   name: "unleash",
 
   async setUp() {
