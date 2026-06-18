@@ -3,27 +3,15 @@ import type { Scenario } from "./types.js";
 /**
  * THE CONTRACT
  *
- * Guarantees "what a correct Unleash OpenFeature provider does." 
- * Each row references a flag in fixtures/unleash-features.json.
- *
- * The "contract" is just a list of Scenario objects.
- *
- * Each Scenario says, in plain terms:
+ * Guarantees "what a correct Unleash OpenFeature provider does."  *
+ * Each Scenario says:
  *   "Given the flags in fixtures/unleash-features.json,
  *    when an app evaluates THIS flag THIS way,
  *    the provider MUST return THIS value / reason / variant / error."
  *
- * tomorrow we can export these same rows to the cross-language
+ * Later we can export these same rows to the cross-language
  * Gherkin contract without rewriting the meaning.
- * 
- * Expectations are aligned to the REAL provider where it is correct:
- *   - variant resolution reason is SPLIT (variant assignment is a weighted split),
- *   - a csv payload resolves as a raw string,
- *   - a json payload that parses to a scalar passes through (valid JsonValue).
- * 
- * Rows the provider gets wrong carry `knownGap` and run as EXPECTED failures.
  */
-
 export const scenarios: Scenario[] = [
   // Booleans
   {
@@ -193,3 +181,5 @@ export const scenarios: Scenario[] = [
     expect: { value: "a,b,c", variant: "csv", reason: "SPLIT" },
   },
 ];
+
+export type ScenarioId = (typeof scenarios)[number]["id"];
