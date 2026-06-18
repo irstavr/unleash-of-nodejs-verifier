@@ -6,7 +6,7 @@ real provider and prints the value, reason, and variant.
 ## Run it (no server needed)
 
 ```bash
-npm run example
+npm run demo
 ```
 
 It starts an in-process fake Unleash Client API (`src/targets/unleash/fake-server.ts`),
@@ -27,5 +27,5 @@ unknown flag  demo.missing         → false                          (reason=ER
 ```bash
 export UNLEASH_URL=http://localhost:4242/api
 export UNLEASH_API_TOKEN=<client-token>
-npm run example
+npm run demo
 ```
