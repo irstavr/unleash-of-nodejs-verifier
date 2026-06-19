@@ -1,6 +1,6 @@
 import { referenceTarget } from "./reference/index.js";
 import type { ProviderTarget } from "./types.js";
-import { unleashTarget } from "./unleashNodejsOFProvider/index.js";
+import { unleashTarget } from "./unleash/index.js";
 
 /**
  * The list of providers the verifier checks.
