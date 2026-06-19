@@ -1,26 +1,45 @@
-import type {
-  Client,
-  EvaluationContext,
-  EvaluationDetails,
-  JsonValue,
-} from '@openfeature/server-sdk';
-import type { Scenario } from '../contract/types.js';
+import type { Client, EvaluationDetails, JsonValue } from "@openfeature/server-sdk";
+import type { Scenario } from "../contract/types.js";
 
+/** 
+ * Make the OpenFeature call a scenario passed and return its EvaluationDetails. 
+ */
 export async function evaluate(
-  client: Client,
-  s: Scenario,
+  client: Client, 
+  scenario: Scenario
 ): Promise<EvaluationDetails<JsonValue>> {
-  const ctx = (s.context ?? {}) as EvaluationContext;
+  const ctx = scenario.context ?? {};
 
-  // calls OF for a scenario
-  switch (s.type) {
-    case 'boolean':
-      return client.getBooleanDetails(s.flagKey, s.default as boolean, ctx) as any;
-    case 'string':
-      return client.getStringDetails(s.flagKey, s.default as string, ctx) as any;
-    case 'number':
-      return client.getNumberDetails(s.flagKey, s.default as number, ctx) as any;
-    case 'object':
-      return client.getObjectDetails(s.flagKey, s.default as JsonValue, ctx) as any;
+  switch (scenario.type) {
+    case "boolean":
+      return client.getBooleanDetails(
+          scenario.flagKey, 
+          scenario.default as boolean, 
+          ctx
+      ) as Promise<EvaluationDetails<JsonValue>>;
+    case "string":
+      return client.getStringDetails(
+          scenario.flagKey, 
+          scenario.default as string, 
+          ctx
+      ) as Promise<EvaluationDetails<JsonValue>>;
+    case "number":
+      return client.getNumberDetails(
+          scenario.flagKey, 
+          scenario.default as number, 
+          ctx
+      ) as Promise<EvaluationDetails<JsonValue>>;
+    case "object":
+      return client.getObjectDetails(
+          scenario.flagKey, 
+          scenario.default as JsonValue, 
+          ctx
+      );
+    default: {
+      // any unhandled flag type -> a compile error
+      const _exhaustive: never = scenario.type;
+      
+      throw new Error(`unsupported flag type: ${String(_exhaustive)}`);
+    }
   }
 }

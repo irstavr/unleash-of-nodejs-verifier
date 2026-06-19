@@ -2,8 +2,9 @@ import http from "node:http";
 import features from "../../../fixtures/unleash-features.json";
 
 /**
- * As real provider builds its own client and only needs a URL, this fake Unleash Server
- * requires no change to the provider's interface and has its real fetch/parse path.
+ * The real provider  only needs a URL to build its own client, 
+ * so this requires no change to the provider's interface and runs 
+ * its real fetch/parse/evaluate path. 
  */
 export interface FakeUnleashControl {
   setFeatures(next: unknown): void;
@@ -53,13 +54,12 @@ export async function startFakeUnleash(initialFeatures: unknown = features): Pro
     });
   });
 
-  const hostname = "127.0.0.1";
-  await new Promise<void>((resolve) => server.listen(0, hostname, () => resolve()));
+  await new Promise<void>((resolve) => server.listen(0, "127.0.0.1", () => resolve()));
   const addr = server.address();
   const port = typeof addr === "object" && addr ? addr.port : 0;
 
   return {
-    url: `http://${hostname}:${port}/api`,
+    url: `http://127.0.0.1:${port}/api`,
     token: "verifier-not-a-real-token",
     control: {
       setFeatures: (next) => {
