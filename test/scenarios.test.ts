@@ -2,6 +2,7 @@ import { type Client, OpenFeature } from "@openfeature/server-sdk";
 import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { scenarios } from "../src/contract/scenarios.js";
 import { targets, type TargetHandle } from "../src/targets/index.js";
+import { Expectation } from "../src/contract/types.js";
 import { evaluate } from "../src/runner/runScenario.js";
 
 // Run the universal contract against EVERY registered provider target.
@@ -28,12 +29,14 @@ describe.each(targets)("Provider conformance · $name", (target) => {
 		const runner = gap ? it.fails : it;
 
 		runner(`${s.id} — ${s.description}${gap ? " [KNOWN GAP]" : ""}`, async () => {
+			const ex: Expectation = s.expect;
+			
 			const d = await evaluate(client, s);
 
-			expect(d.value).toEqual(s.expect.value);
-			if (s.expect.reason) expect(d.reason).toBe(s.expect.reason);
-			if (s.expect.variant) expect(d.variant).toBe(s.expect.variant);
-			if (s.expect.errorCode) expect(d.errorCode).toBe(s.expect.errorCode);
+			expect(d.value).toEqual(ex.value);
+			if (ex.reason) expect(d.reason).toBe(ex.reason);
+			if (ex.variant) expect(d.variant).toBe(ex.variant);
+			if (ex.errorCode) expect(d.errorCode).toBe(ex.errorCode);
 			else expect(d.errorCode).toBeUndefined();
 		});
 	}

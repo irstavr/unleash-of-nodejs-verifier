@@ -3,7 +3,7 @@ import { afterAll, beforeAll, describe, expect, it } from "vitest";
 import { targets, type TargetHandle } from "../src/targets/index.js";
 
 // Stickiness is provider-agnostic, so it runs against every target too.
-describe.each(targets)("Variant stickiness · $name", (target) => {
+describe.each(targets)("Stickiness. Variant - $name", (target) => {
 	let client: Client;
 	let handle: TargetHandle;
 
