@@ -19,7 +19,7 @@ export interface UnleashLike {
 }
 
 /**
- * REFERENCE PROVIDER — a LLM-written, conforms contract with no 'known gaps'.
+ * REFERENCE PROVIDER — a LLM-written, adopts contract with no 'known gaps'.
  *
  * provider NEVER throws and NEVER returns a bare value
  * it returns ResolutionDetails with the right reason/errorCode.
@@ -133,42 +133,13 @@ export class ReferenceUnleashProvider implements Provider {
 					variant: v.name,
 				};
 
-			// Active variant but no payload to coerce into the requested type.
+			// Active variant, but no payload to coerce into the requested type.
 			if (!v.payload) return this.errored(defaultValue, ErrorCode.TYPE_MISMATCH, v.name);
 
-			const { type, value } = v.payload; // value is ALWAYS a string in Unleash
-
-			if (want === "string") {
-				// string and csv payloads both resolve as raw strings.
-				if (type !== "string" && type !== "csv")
-					return this.errored(defaultValue, ErrorCode.TYPE_MISMATCH, v.name);
-				return this.ok(value, v.name);
-			}
-
-			if (want === "number") {
-				if (type !== "number")
-					return this.errored(defaultValue, ErrorCode.TYPE_MISMATCH, v.name);
-				// Guard the JS footgun: Number("") === 0 and Number("  ") === 0.
-				if (value.trim() === "")
-					return this.errored(defaultValue, ErrorCode.PARSE_ERROR, v.name);
-				const n = Number(value);
-				if (!Number.isFinite(n))
-					return this.errored(defaultValue, ErrorCode.PARSE_ERROR, v.name);
-				return this.ok(n, v.name);
-			}
-
-			// want === 'object'
-			if (type !== "json")
-				return this.errored(defaultValue, ErrorCode.TYPE_MISMATCH, v.name);
-			let parsed: unknown;
-			try {
-				parsed = JSON.parse(value);
-			} catch {
-				return this.errored(defaultValue, ErrorCode.PARSE_ERROR, v.name);
-			}
-			// A scalar (42, "x", true, null) is a valid OpenFeature JsonValue, so it
-			// passes through; only malformed JSON is an error.
-			return this.ok(parsed, v.name);
+			const result = coercePayload(v.payload.type, v.payload.value, want);
+			return result.ok
+				? this.ok(result.value, v.name)
+				: this.errored(defaultValue, result.code, v.name);
 		});
 	}
 
@@ -203,6 +174,40 @@ export class ReferenceUnleashProvider implements Provider {
 		} catch {
 			return this.errored(defaultValue, ErrorCode.GENERAL);
 		}
+	}
+}
+
+type CoerceResult = { ok: true; value: unknown } | { ok: false; code: ErrorCode };
+
+function coercePayload(
+	type: string,
+	value: string,
+	want: "string" | "number" | "object",
+): CoerceResult {
+	// string/csv -> raw string
+	if (want === "string") {
+		if (type !== "string" && type !== "csv") return { ok: false, code: ErrorCode.TYPE_MISMATCH };
+		return { ok: true, value };
+	}
+
+	// number -> finite number (guards Number("") === 0)
+	if (want === "number") {
+		if (type !== "number") return { ok: false, code: ErrorCode.TYPE_MISMATCH };
+		if (value.trim() === "") return { ok: false, code: ErrorCode.PARSE_ERROR };
+		const n = Number(value);
+		if (!Number.isFinite(n)) return { ok: false, code: ErrorCode.PARSE_ERROR };
+		return { ok: true, value: n };
+	}
+
+	// mismatch -> TYPE_MISMATCH
+	if (type !== "json") return { ok: false, code: ErrorCode.TYPE_MISMATCH };
+	
+	try {
+		//json -> parsed (scalars pass through)
+		return { ok: true, value: JSON.parse(value) };
+	} catch {
+		//bad json -> PARSE_ERROR
+		return { ok: false, code: ErrorCode.PARSE_ERROR };
 	}
 }
 
