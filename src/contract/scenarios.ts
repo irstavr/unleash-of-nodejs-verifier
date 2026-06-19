@@ -1,18 +1,16 @@
 import type { Scenario } from "./types.js";
 
 /**
- * THE CONTRACT
+ * THE CONTRACT — the OpenFeature behaviour a correct Unleash provider must show.
  *
- * Guarantees "what a correct Unleash OpenFeature provider does."  *
- * Each Scenario says:
- *   "Given the flags in fixtures/unleash-features.json,
- *    when an app evaluates THIS flag THIS way,
- *    the provider MUST return THIS value / reason / variant / error."
+ * Each row references a flag in `fixtures/unleash-features.json` and says, plainly:
+ * "given this flag, called this way, the provider MUST return this value / reason / variant / error." 
+ * 
+ * It's provider-NEUTRAL data, so the same rows can later be exported to a cross-language Gherkin contract.
  *
- * Later we can export these same rows to the cross-language
- * Gherkin contract without rewriting the meaning.
+ * Where a provider is wrong, that's recorded as a `knownGap` on the TARGET (src/targets/<name>), not here.
  */
-export const scenarios: Scenario[] = [
+export const scenarios = [
   // Booleans
   {
     id: "bool-enabled",
@@ -81,7 +79,7 @@ export const scenarios: Scenario[] = [
     type: "string",
     default: "",
     context: { targetingKey: "user-42" },
-    expect: { value: "hello-world", variant: "friendly", reason: "SPLIT" },
+    expect: { value: "hello-world", variant: "friendly", reason: "SPLIT" }, // variant resolution reason is SPLIT (variant assignment is a weighted split),
   },
   {
     id: "variant-string-on-disabled",
@@ -103,7 +101,7 @@ export const scenarios: Scenario[] = [
     type: "number",
     default: 1,
     context: { targetingKey: "user-42" },
-    expect: { value: 1.25, variant: "surge", reason: "SPLIT" },
+    expect: { value: 1.25, variant: "surge", reason: "SPLIT" },  // variant resolution reason is SPLIT (variant assignment is a weighted split),
   },
   {
     id: "number-empty-string-guard",
@@ -135,7 +133,7 @@ export const scenarios: Scenario[] = [
     type: "object",
     default: {},
     context: { targetingKey: "user-42" },
-    expect: { value: { maxItems: 50, express: true }, variant: "rollout", reason: "SPLIT" },
+    expect: { value: { maxItems: 50, express: true }, variant: "rollout", reason: "SPLIT" },  // variant resolution reason is SPLIT (variant assignment is a weighted split),
   },
   {
     id: "variant-json-array",
@@ -145,7 +143,7 @@ export const scenarios: Scenario[] = [
     type: "object",
     default: [],
     context: { targetingKey: "user-42" },
-    expect: { value: [1, 2, 3], variant: "list", reason: "SPLIT" },
+    expect: { value: [1, 2, 3], variant: "list", reason: "SPLIT" },  // variant resolution reason is SPLIT (variant assignment is a weighted split),
   },
   {
     id: "object-scalar-json-passthrough",
@@ -156,7 +154,7 @@ export const scenarios: Scenario[] = [
     type: "object",
     default: {},
     context: { targetingKey: "user-42" },
-    expect: { value: 42, variant: "scalar", reason: "SPLIT" },
+    expect: { value: 42, variant: "scalar", reason: "SPLIT" },  // variant resolution reason is SPLIT (variant assignment is a weighted split),
   },
   {
     id: "object-on-broken-json",
@@ -178,8 +176,9 @@ export const scenarios: Scenario[] = [
     type: "string",
     default: "none",
     context: { targetingKey: "user-42" },
-    expect: { value: "a,b,c", variant: "csv", reason: "SPLIT" },
+    expect: { value: "a,b,c", variant: "csv", reason: "SPLIT" }, // variant resolution reason is SPLIT (variant assignment is a weighted split),
   },
-];
+] as const satisfies readonly Scenario[];
 
+/** Every scenario id, as a union — lets targets type their `knownGaps` safely. */
 export type ScenarioId = (typeof scenarios)[number]["id"];
