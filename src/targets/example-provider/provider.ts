@@ -67,17 +67,13 @@ export class ReferenceUnleashProvider implements Provider {
 		return this.guard(defaultValue, () => {
 			if (!this.ready) return this.notReady(defaultValue);
 			const def = this.unleash.getFeatureToggleDefinition(flagKey);
-			if (!def) return this.errored(defaultValue, ErrorCode.FLAG_NOT_FOUND);
-			if (!def.enabled)
-				return { value: defaultValue, reason: StandardResolutionReasons.DISABLED };
+			// Unleash philosophy: a missing flag is NOT an error — return the default.
+			if (!def) return this.happy(defaultValue);
+			// A disabled boolean has a real evaluated value: false (not the default).
+			if (!def.enabled) return this.happy(false);
 
 			const enabled = this.unleash.isEnabled(flagKey, toUnleashContext(context));
-			return {
-				value: enabled,
-				reason: enabled
-					? StandardResolutionReasons.TARGETING_MATCH
-					: StandardResolutionReasons.DEFAULT,
-			};
+			return this.happy(enabled);
 		});
 	}
 
@@ -120,18 +116,14 @@ export class ReferenceUnleashProvider implements Provider {
 	): Promise<ResolutionDetails<any>> {
 		return this.guard(defaultValue, () => {
 			if (!this.ready) return this.notReady(defaultValue);
+			// Missing flag is NOT an error — hand back the caller default.
 			if (!this.unleash.getFeatureToggleDefinition(flagKey))
-				return this.errored(defaultValue, ErrorCode.FLAG_NOT_FOUND);
+				return this.happy(defaultValue);
 
 			const v = this.unleash.getVariant(flagKey, toUnleashContext(context));
 
 			// Flag is off -> hand back the caller's default, never the "disabled" sentinel.
-			if (!v.feature_enabled)
-				return {
-					value: defaultValue,
-					reason: StandardResolutionReasons.DISABLED,
-					variant: v.name,
-				};
+			if (!v.feature_enabled) return this.happy(defaultValue, v.name);
 
 			// Active variant, but no payload to coerce into the requested type.
 			if (!v.payload) return this.errored(defaultValue, ErrorCode.TYPE_MISMATCH, v.name);
@@ -144,8 +136,15 @@ export class ReferenceUnleashProvider implements Provider {
 	}
 
 	private ok(value: unknown, variant: string): ResolutionDetails<any> {
-		// Variant assignment is a weighted/sticky split, so SPLIT is the right reason.
-		return { value, variant, reason: StandardResolutionReasons.SPLIT };
+		return this.happy(value, variant);
+	}
+
+	/**
+	 * A successful (non-error) resolution. Per the settled spec the happy path carries no
+	 * meaningful reason, so we emit UNKNOWN rather than inventing SPLIT/DISABLED/etc.
+	 */
+	private happy(value: unknown, variant?: string): ResolutionDetails<any> {
+		return { value, variant, reason: StandardResolutionReasons.UNKNOWN };
 	}
 
 	private errored(
