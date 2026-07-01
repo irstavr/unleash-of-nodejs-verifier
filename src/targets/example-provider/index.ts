@@ -10,6 +10,8 @@ import { ReferenceUnleashProvider } from "./provider.js";
  */
 export const referenceTarget: ProviderTarget = {
   name: "reference",
+  // Server paradigm: evaluates locally, takes per-call context.
+  capabilities: ["localEval", "perCallContext"],
   async setUp() {
     const unleash = await bootstrapUnleash();
     const provider = new ReferenceUnleashProvider(unleash);

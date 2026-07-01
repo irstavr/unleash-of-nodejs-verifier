@@ -5,6 +5,9 @@ import { startFakeUnleash } from "./fake-server.js";
 export const unleashTarget: ProviderTarget = {
   name: "unleash",
 
+  // Server provider: evaluates locally and takes per-call context.
+  capabilities: ["localEval", "perCallContext"],
+
   async setUp() {
     // The Unleash target: the real `@unleash/openfeature-node-provider`, pointed at a
     // local fake Unleash Client API (no server, no token, loopback only). 
@@ -24,11 +27,13 @@ export const unleashTarget: ProviderTarget = {
 
   // Scenarios the real provider doesn't satisfy yet (green while tracked; red once fixed).
   knownGaps: {
-    "bool-disabled-default-true":
-      "Returns false for a disabled boolean (ignores caller default); inconsistent with the variant path which returns the default on DISABLED.",
-    "bool-targeting-miss":
-      "Reports DISABLED for an enabled-but-unmatched flag; should be DEFAULT.",
+    // Diverges from the settled spec: emits FLAG_NOT_FOUND for a missing flag, but Unleash
+    // philosophy (and our contract) says absence is not an error — return the plain default.
+    "bool-missing-flag":
+      "Returns FLAG_NOT_FOUND for a missing flag; spec says missing → default with no error.",
+    // Real bug / release blocker: Number("") === 0, so an empty NUMBER payload returns a
+    // silent 0 instead of the default + PARSE_ERROR.
     "number-empty-string-guard":
-      'Returns 0 for an empty NUMBER payload (Number("") === 0); should be PARSE_ERROR.',
+      'Returns 0 for an empty NUMBER payload (Number("") === 0); should be default + PARSE_ERROR.',
   },
 };
