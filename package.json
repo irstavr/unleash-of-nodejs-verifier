@@ -8,7 +8,12 @@
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
-    "demo": "tsx examples/demo/index.ts"
+    "demo": "tsx examples/demo/index.ts",
+    "contract:export": "tsx scripts/export-contract.ts",
+    "verify:web": "vitest run test/web-scenarios.test.ts",
+    "verify:server": "vitest run test/scenarios.test.ts test/variant-stick.test.ts",
+    "verify:version": "bash scripts/verify-version.sh",
+    "verify:matrix": "bash scripts/verify-matrix.sh"
   },
   "dependencies": {
     "@openfeature/server-sdk": "^1.18.0",
