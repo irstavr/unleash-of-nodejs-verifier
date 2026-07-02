@@ -1,0 +1,160 @@
+{
+  "toggles": [
+    {
+      "name": "demo.checkout-v2",
+      "enabled": true,
+      "variant": {
+        "name": "disabled",
+        "enabled": false,
+        "feature_enabled": true
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.legacy-banner",
+      "enabled": false,
+      "variant": {
+        "name": "disabled",
+        "enabled": false,
+        "feature_enabled": false
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.eu-only",
+      "enabled": true,
+      "variant": {
+        "name": "disabled",
+        "enabled": false,
+        "feature_enabled": true
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.greeting",
+      "enabled": true,
+      "variant": {
+        "name": "friendly",
+        "enabled": true,
+        "feature_enabled": true,
+        "payload": {
+          "type": "string",
+          "value": "hello-world"
+        }
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.checkout-config",
+      "enabled": true,
+      "variant": {
+        "name": "rollout",
+        "enabled": true,
+        "feature_enabled": true,
+        "payload": {
+          "type": "json",
+          "value": "{\"maxItems\":50,\"express\":true}"
+        }
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.array-config",
+      "enabled": true,
+      "variant": {
+        "name": "list",
+        "enabled": true,
+        "feature_enabled": true,
+        "payload": {
+          "type": "json",
+          "value": "[1,2,3]"
+        }
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.scalar-json",
+      "enabled": true,
+      "variant": {
+        "name": "scalar",
+        "enabled": true,
+        "feature_enabled": true,
+        "payload": {
+          "type": "json",
+          "value": "42"
+        }
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.price-multiplier",
+      "enabled": true,
+      "variant": {
+        "name": "surge",
+        "enabled": true,
+        "feature_enabled": true,
+        "payload": {
+          "type": "number",
+          "value": "1.25"
+        }
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.empty-number",
+      "enabled": true,
+      "variant": {
+        "name": "blank",
+        "enabled": true,
+        "feature_enabled": true,
+        "payload": {
+          "type": "number",
+          "value": ""
+        }
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.broken-json",
+      "enabled": true,
+      "variant": {
+        "name": "bad",
+        "enabled": true,
+        "feature_enabled": true,
+        "payload": {
+          "type": "json",
+          "value": "{not valid json"
+        }
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.csv-export",
+      "enabled": true,
+      "variant": {
+        "name": "csv",
+        "enabled": true,
+        "feature_enabled": true,
+        "payload": {
+          "type": "csv",
+          "value": "a,b,c"
+        }
+      },
+      "impressionData": false
+    },
+    {
+      "name": "demo.ab-test",
+      "enabled": true,
+      "variant": {
+        "name": "control",
+        "enabled": true,
+        "feature_enabled": true,
+        "payload": {
+          "type": "string",
+          "value": "A"
+        }
+      },
+      "impressionData": false
+    }
+  ]
+}
