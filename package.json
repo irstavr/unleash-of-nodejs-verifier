@@ -4,7 +4,19 @@
   "description": "Verification of Node.js Unleash OpenFeature provider",
   "type": "module",
   "private": true,
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" },
+    "./contract.json": "./contract.json",
+    "./fixtures/unleash-features.json": "./fixtures/unleash-features.json",
+    "./fixtures/frontend-toggles.json": "./fixtures/frontend-toggles.json"
+  },
+  "files": ["dist", "contract.json", "fixtures"],
   "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
     "test": "vitest run",
     "test:watch": "vitest",
     "typecheck": "tsc --noEmit",
