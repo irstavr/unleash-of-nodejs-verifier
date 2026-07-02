@@ -1,5 +1,16 @@
+import { readFileSync } from "node:fs";
 import http from "node:http";
-import features from "../../../fixtures/unleash-features.json";
+
+/**
+ * Load the default client-features fixture at call time via a URL relative to this module.
+ * Reading it (rather than `import ... with { type: "json" }`) keeps the JSON out of the TS
+ * program, so the package builds with plain `tsc` (no bundler) and resolves correctly both
+ * in-repo and when installed as a dependency (dist/ and fixtures/ are siblings under root).
+ */
+function defaultFeatures(): unknown {
+  const url = new URL("../../../fixtures/unleash-features.json", import.meta.url);
+  return JSON.parse(readFileSync(url, "utf8"));
+}
 
 /**
  * The real provider  only needs a URL to build its own client, 
@@ -18,7 +29,9 @@ export interface FakeUnleash {
   close: () => Promise<void>;
 }
 
-export async function startFakeUnleash(initialFeatures: unknown = features): Promise<FakeUnleash> {
+export async function startFakeUnleash(
+  initialFeatures: unknown = defaultFeatures(),
+): Promise<FakeUnleash> {
   let current = initialFeatures;
   let failStatus = 0;
   let failCount = 0;
