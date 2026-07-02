@@ -7,22 +7,21 @@ import { toFrontendToggles } from "../src/targets/js-web-provider/toggles.js";
 import clientFeatures from "../fixtures/unleash-features.json" with { type: "json" };
 
 /**
- * Emit the contract as language-NEUTRAL data so any provider repo (Rust, Go, Java, …)
+ * Emit the contract as language-neutral data so any provider (Rust, Go, Java, …)
  * can consume the exact same rules without re-reading the TypeScript.
  *
- *   contract.json                  → the scenario catalogue + capability legend + fixtures
+ *   contract.json                 → the scenario catalogue + capability legend + fixtures
  *   fixtures/frontend-toggles.json → the Frontend-API shape a web runner must serve
  *
- * Run: `npm run contract:export`
+ * `npm run contract:export`
  */
 const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
 
 const contract = {
-  // Bump when the catalogue changes in a way consumers must react to.
   contractVersion: "1.0.0",
   description:
-    "End-result OpenFeature behaviour a correct Unleash provider must show. One catalogue, every paradigm.",
+    "End-result OpenFeature behaviour a correct Unleash provider must show.",
   capabilities: {
     localEval:
       "Provider evaluates flags itself and OWNS error semantics (TYPE_MISMATCH, PARSE_ERROR). Server providers.",

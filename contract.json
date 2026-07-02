@@ -1,6 +1,6 @@
 {
   "contractVersion": "1.0.0",
-  "description": "End-result OpenFeature behaviour a correct Unleash provider must show. One catalogue, every paradigm.",
+  "description": "End-result OpenFeature behaviour a correct Unleash provider must show.",
   "capabilities": {
     "localEval": "Provider evaluates flags itself and OWNS error semantics (TYPE_MISMATCH, PARSE_ERROR). Server providers.",
     "perCallContext": "Provider takes dynamic evaluation context on every call. Server providers. (Web providers use static context.)"
